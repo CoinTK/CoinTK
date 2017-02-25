@@ -4,7 +4,7 @@
 CoinTK -- An open-sourced platform for rapid prototyping and testing of BitCoin trading strategies, with visualiaztion features via our open-sourced iOS app [BitBox](https://github.com/CoinTK/BitBox). Machine Learning algorithms coming *Soon<sup>TM</sup>*.
 
 
-
+<br>
 # Getting Started
 
 1. Download the code: ```git clone https://github.com/CoinTK/CoinTK.git``` and install prerequisites.
@@ -13,11 +13,13 @@ CoinTK -- An open-sourced platform for rapid prototyping and testing of BitCoin 
 4. [Profit](http://i1.kym-cdn.com/entries/icons/original/000/000/248/underpants.jpg)
 
 
-You can get [full data](#data) if necessary, otherwise you can use test datasets included in ```data/``` (depending on your Strategy and parameters, you may not get any trade activity running on the sample datasets).
+In all seriousness -- you can get [full data](#data) if necessary, otherwise you can use test datasets included in ```data/``` (depending on your Strategy and parameters, you may not get any trade activity running on the sample datasets).
 
 To get started, run ```python backtests/naive.py```. You should get something like this:
 
 ![Naive Backtest Output](plots/naive.py-output.png)
+![Naive Backtest Terminal Output](plots/naive.py-terminal-output.png)
+
 
 
 From here, you can play around with different strategies and testing parameters via scripts in ```backtests```, or start thinking about making your own [strategy](#creating-your-own-strategies).
