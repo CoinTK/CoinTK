@@ -2,3 +2,4 @@
 data/*
 *.csv
 *.npz
+!data/*sample.csv

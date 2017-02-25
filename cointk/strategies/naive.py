@@ -13,6 +13,7 @@ class NaiveStrategy(Strategy):
         self.price_inc = price_inc
 
     def gen_order(self, ts, price, qty, funds, balance):
+        order = None
         if len(self.old_prices) == self.n_prices:
             uptrend = [self.old_prices[i] >= self.old_prices[i-1]
                        for i in range(1, self.n_prices)].count(True)
@@ -21,9 +22,10 @@ class NaiveStrategy(Strategy):
                          for i in range(1, self.n_prices)].count(True)
             downtrend /= (self.n_prices - 1)
             if uptrend > self.threshold:
-                return Order(buy=True, price=price + self.price_inc,
-                             qty=self.qty, identifier=len(self.orders))
+                order = Order(buy=True, price=price + self.price_inc,
+                              qty=self.qty, identifier=len(self.orders))
             if downtrend > self.threshold:
-                return Order(sell=True, price=price - self.price_inc,
-                             qty=self.qty, identifier=len(self.orders))
+                order = Order(sell=True, price=price - self.price_inc,
+                              qty=self.qty, identifier=len(self.orders))
         self.old_prices.append(price)
+        return order
