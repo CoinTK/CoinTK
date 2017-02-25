@@ -1,4 +1,8 @@
 class Strategy(object):
+    '''
+        A strategy for deciding when and how much to buy/sell
+
+    '''
     def __init__(self):
         self.orders = []
 
