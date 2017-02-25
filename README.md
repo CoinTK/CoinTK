@@ -16,7 +16,7 @@ You can get [full data](#data) if necessary, otherwise you can use test datasets
 
 To get started, run ```python backtests/naive.py```. You should get something like this:
 
-(plots/naive.py-output.png)
+![Naive Backtest Output](plots/naive.py-output.png)
 
 
 From here, you can play around with different strategies and testing parameters via scripts in ```backtests```, or start thinking about making your own [strategy](#creating-your-own-strategies).
