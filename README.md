@@ -16,7 +16,7 @@ You can get [full data](#data) if necessary, otherwise you can use test datasets
 
 To get started, run ```python backtests/naive.py```. You should get something like this:
 
-(plots/naive.py-out.png)
+(plots/naive.py-output.png)
 
 
 From here, you can play around with different strategies and testing parameters via scripts in ```backtests```, or start thinking about making your own [strategy](#creating-your-own-strategies).
@@ -46,7 +46,7 @@ Happy developing (and mining Bitcoins)!
 
 # Creating your own strategies
 
-To create your own strategy, create a file in ```cointk/strategies``` similar to one of the sample strategies given: [Naive](cointk/strategies/hp_naive.py), [Reverse Naive](cointk/strategies/naive_reverse.py), [Random](cointk/strategies/hp_simple_random.py). It should inherit the ```Strategies``` class (defined [here](cointk/strategies/core.py)) and have a 
+To create your own strategy, create a file in ```cointk/strategies``` similar to one of the sample strategies given: [Naive](cointk/strategies/hp_naive.py), [Reverse Naive](cointk/strategies/naive_reverse.py), [Random](cointk/strategies/simple_random.py). It should inherit the ```Strategies``` class (defined [here](cointk/strategies/core.py)) and have a 
 
 	gen_order(self, ts, price, qty, funds, balance): 
 
