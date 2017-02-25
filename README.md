@@ -1,6 +1,7 @@
-## CoinTK -- Smart Bitcoin Analyzing & Trading Toolkit
+# CoinTK
+## Smart Bitcoin Analyzing & Trading Toolkit
 
-Open-sourced platform for rapid prototyping and testing of BitCoin trading strategies, with visualiaztion features via our open-sourced iOS app [BitBox](https://github.com/CoinTK/BitBox).
+CoinTK -- An open-sourced platform for rapid prototyping and testing of BitCoin trading strategies, with visualiaztion features via our open-sourced iOS app [BitBox](https://github.com/CoinTK/BitBox). Machine Learning algorithms coming *Soon<sup>TM</sup>*.
 
 
 
