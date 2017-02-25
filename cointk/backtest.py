@@ -3,6 +3,7 @@ from plotly.offline import plot
 import plotly.graph_objs as go
 from .data import load_data, subarray_with_stride, to_datetimes
 import time
+import pprint
 
 # read in the correct set of data
 def resolve_data(data, fnm, name, val, test, train_prop=0.8, val_prop=0.1):
@@ -18,8 +19,9 @@ def resolve_data(data, fnm, name, val, test, train_prop=0.8, val_prop=0.1):
 
 def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
              fee=0.0025, data=None, data_fnm='data/coinbaseUSD.npz',
-             data_name='data', plot_name='temp-plot.html', val=True, test=False, train_prop=0.8, val_prop=0.1):
+             data_name='data', plot_name='temp-plot.html', val=True, test=False, train_prop=0.8, val_prop=0.1, verbose=1):
     
+    input_args = locals()  # save the input arguments
     time1 = time.time()
     data = resolve_data(data, data_fnm, data_name, val, test, train_prop, val_prop) # default to validation
     funds = initial_funds # US dollars
@@ -37,6 +39,9 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
     # we don't have historical data on the "Order Book", so we can only infer what kind of order/sell strategy would have worked based on the actual transactions
     # namely, if we sell at a lower price or buy at a higher price for the same or less quantity, we should succeed
     for i, (ts, price, qty) in enumerate(data[:-1]):
+        if verbose > 1 and i%1000 == 0:
+            print(i, ('worth', worth, 'balance', balance, 'funds', funds))
+
         next_ts, next_price, next_qty = data[i+1]
         order = strategy.evaluate(ts, price, qty, funds, balance)
         if order is None:
@@ -96,15 +101,18 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
 
     time3 = time.time()
 
-    print('=' * 50)
-    print('Backtest summary for {}:'.format(strategy))
-    print('Funds: {} -> {}'.format(initial_funds, funds))
-    print('Balance: {} -> {}'.format(initial_balance, balance))
-    print('Net worth: {} -> {}'.format(initial_worth, worth))
-    buy_hold_worth = (initial_funds / data[0][1]
-                      + initial_balance) * data[-1][1]
-    print('Buy hold equivelent: {} -> {}'.format(initial_worth,
-                                                 buy_hold_worth))
+    if verbose > 0:
+        print('=' * 50)
+        print('Backtest summary for:')
+        pp = pprint.PrettyPrinter(indent=4)  # log of what this test run was for
+        pp.pprint(input_args)
+        print('Funds: {} -> {}'.format(initial_funds, funds))
+        print('Balance: {} -> {}'.format(initial_balance, balance))
+        print('Net worth: {} -> {}'.format(initial_worth, worth))
+        buy_hold_worth = (initial_funds / data[0][1]
+                          + initial_balance) * data[-1][1]
+        print('Buy hold equivelent: {} -> {}'.format(initial_worth,
+                                                     buy_hold_worth))
 
     plot_data = subarray_with_stride(data, 100)
     print(plot_data.shape)
@@ -129,9 +137,11 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
     plot(go.Figure(data=traces, layout=layout), filename=plot_name)
 
     time4 = time.time()
-    print('time to load data:, ', time2-time1)
-    print('time to train:, ', time3-time2)
-    print('time to plot:, ', time4-time3)
+    
+    if verbose > 0:
+        print('time to load data: ', time2-time1)
+        print('time to train: {}, {}s per 1000 data'.format(time3-time2, (time3-time2)/len(data)*1000))
+        print('time to plot: ', time4-time3)
 
     return dict(fund_history=fund_history,
                 balance_history=balance_history,
