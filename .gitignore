@@ -3,3 +3,6 @@ data/*
 *.csv
 *.npz
 !data/*sample.csv
+
+*.pyc
+*.pyo
