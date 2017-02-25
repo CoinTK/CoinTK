@@ -1,0 +1,4 @@
+*.html
+data/*
+*.csv
+*.npz
