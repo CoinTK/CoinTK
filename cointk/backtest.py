@@ -2,6 +2,7 @@ from random import random
 from plotly.offline import plot
 import plotly.graph_objs as go
 from .data import load_data, subarray_with_stride, to_datetimes
+import time
 
 
 def resolve_data(data, fnm, name, datapart,
@@ -23,10 +24,13 @@ def resolve_data(data, fnm, name, datapart,
 
 def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
              fee=0.0025, data=None, data_fnm='data/coinbaseUSD.npz',
-             data_name='data', datapart='val'):
+             data_name='data', datapart='val',
+             plot_name='temp-plot.html',
+             train_prop=0.8, val_prop=0.1):
     # default to validation
     data = resolve_data(data, data_fnm, data_name, datapart)
     funds = initial_funds  # US dollars
+    time1 = time.time()
     fund_history = [funds]
     balance = initial_balance  # bitcoin amounts
     balance_history = [balance]
@@ -43,6 +47,8 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
     # what kind of order/sell strategy would have worked based on the actual
     # transactions namely, if we sell at a lower price or buy at a higher price
     # for the same or less quantity, we should succeed
+    time2 = time.time()
+
     for i, (ts, price, qty) in enumerate(data[:-1]):
         next_ts, next_price, next_qty = data[i+1]
         order = strategy.evaluate(ts, price, qty, funds, balance)
@@ -105,8 +111,10 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
         worth_history.append(worth)
         balance_worth_history.append(balance * next_price)
 
+    time3 = time.time()
+
     print('=' * 50)
-    print('Backtest summary:')
+    print('Backtest summary for {}:'.format(strategy))
     print('Funds: {} -> {}'.format(initial_funds, funds))
     print('Balance: {} -> {}'.format(initial_balance, balance))
     print('Net worth: {} -> {}'.format(initial_worth, worth))
@@ -132,7 +140,12 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
             title='Value (USD)'
         ),
     )
-    plot(go.Figure(data=traces, layout=layout))
+    plot(go.Figure(data=traces, layout=layout), filename=plot_name)
+
+    time4 = time.time()
+    print('time to load data:, ', time2-time1)
+    print('time to train:, ', time3-time2)
+    print('time to plot:, ', time4-time3)
 
     return dict(fund_history=fund_history,
                 balance_history=balance_history,
