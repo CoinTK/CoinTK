@@ -22,11 +22,15 @@ def load_data(fnm, name='data', train_prop=0.8,
     return train_data, val_data, test_data
 
 
+def save_data(data, fnm, name='data'):
+    np.savez(fnm, **{name: data})
+
+
 def csv_to_npz(csv_fnm, npz_fnm, name='data'):
     with open(csv_fnm, 'r') as f:
         reader = csv.reader(f)
-        data = np.asarray(list(reader), dtype='float32')
-    np.savez(npz_fnm, data=data)
+        data = np.asarray(list(reader)[:-1], dtype='float32')
+    np.savez(npz_fnm, **{name: data})
 
 
 def load_coinbase_usd():
