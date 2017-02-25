@@ -7,6 +7,7 @@ class NaiveStrategyReverse(Strategy):
     '''
         REVERSE basic strategy: buy if we're on a rising price trend, sell if we've been losing money
 
+        Essentially, we're betting against the market trend
     '''
     def __init__(self, n_prices=10, qty=0.01, threshold=0.8, price_inc=0.1):
         super().__init__()

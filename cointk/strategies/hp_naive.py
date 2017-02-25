@@ -10,6 +10,9 @@ class NaiveStrategy(Strategy):
 
         This is just to provide a 'baseline' to test the performance of our
         smarter algorithms
+
+        This is significantly faster than naive.py, since it doesn't recalculate
+        uptrend/downtrends from scratch every time.
     '''
     def __init__(self, n_prices=10, qty=0.01, threshold=0.8, price_inc=0.1):
         super().__init__()

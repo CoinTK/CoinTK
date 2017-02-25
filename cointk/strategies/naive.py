@@ -3,8 +3,10 @@ from ..order import Order
 from collections import deque
 
 
-class NaiveStrategy(Strategy):
+class OldNaiveStrategy(Strategy):
     '''
+        NOTE: DEPRECIATED. Use hp_naive instead.
+
         Very basic strategy: buy if we're on a rising price trend,
         sell if we've been losing money
 
