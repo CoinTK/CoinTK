@@ -2,6 +2,7 @@ from random import random
 from plotly.offline import plot
 import plotly.graph_objs as go
 from .data import load_data, subarray_with_stride, to_datetimes
+import time
 
 # read in the correct set of data
 def resolve_data(data, fnm, name, val, test, train_prop=0.8, val_prop=0.1):
@@ -17,8 +18,10 @@ def resolve_data(data, fnm, name, val, test, train_prop=0.8, val_prop=0.1):
 
 def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
              fee=0.0025, data=None, data_fnm='data/coinbaseUSD.npz',
-             data_name='data', val=True, test=False):
-    data = resolve_data(data, data_fnm, data_name, val, test) # default to validation
+             data_name='data', plot_name='temp-plot.html', val=True, test=False, train_prop=0.8, val_prop=0.1):
+    
+    time1 = time.time()
+    data = resolve_data(data, data_fnm, data_name, val, test, train_prop, val_prop) # default to validation
     funds = initial_funds # US dollars
     fund_history = [funds]
     balance = initial_balance # bitcoin amounts
@@ -27,6 +30,8 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
     worth = initial_worth # total value converted to dollars
     worth_history = [worth]
     ts_history = [data[0][0]]
+
+    time2 = time.time()
 
     # each tuple is the log of an actual transaction at timestamp ts for the listed price/qty
     # we don't have historical data on the "Order Book", so we can only infer what kind of order/sell strategy would have worked based on the actual transactions
@@ -88,8 +93,11 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
         worth = funds + balance * next_price
         worth_history.append(worth)
 
+
+    time3 = time.time()
+
     print('=' * 50)
-    print('Backtest summary:')
+    print('Backtest summary for {}:'.format(strategy))
     print('Funds: {} -> {}'.format(initial_funds, funds))
     print('Balance: {} -> {}'.format(initial_balance, balance))
     print('Net worth: {} -> {}'.format(initial_worth, worth))
@@ -118,7 +126,12 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
             overlaying='y'
         )
     )
-    plot(go.Figure(data=traces, layout=layout))
+    plot(go.Figure(data=traces, layout=layout), filename=plot_name)
+
+    time4 = time.time()
+    print('time to load data:, ', time2-time1)
+    print('time to train:, ', time3-time2)
+    print('time to plot:, ', time4-time3)
 
     return dict(fund_history=fund_history,
                 balance_history=balance_history,
