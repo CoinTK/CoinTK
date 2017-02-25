@@ -1,3 +1,3 @@
-from .naive import *
+from .hp_naive import *
 from .naive_reverse import *
-from .random import *
+from .simple_random import *

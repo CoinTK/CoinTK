@@ -6,4 +6,4 @@ from cointk.backtest import backtest
 strategy = QtyIndependent()
 compute_prescient(
     strategy, history_fnm='prescient_histories/qty_independent.npz')
-backtest(strategy, datapart='train')
+backtest(strategy, datapart='train', verbose=1)

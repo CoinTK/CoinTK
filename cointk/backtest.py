@@ -27,7 +27,7 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
              fee=0.0025, data=None, data_fnm='data/coinbaseUSD.npz',
              data_name='data', datapart='val',
              plot_name='temp-plot.html',
-             train_prop=0.8, val_prop=0.1):
+             train_prop=0.8, val_prop=0.1, verbose=1, print_freq=10000):
 
     input_args = locals()  # save the input arguments
 
@@ -55,7 +55,7 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
     time2 = time.time()
 
     for i, (ts, price, qty) in enumerate(data[:-1]):
-        if verbose > 1 and i%1000 == 0:
+        if verbose > 1 and i % print_freq == 0:
             print(i, ('worth', worth, 'balance', balance, 'funds', funds))
 
         next_ts, next_price, next_qty = data[i+1]
@@ -78,6 +78,8 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
             # we can only guarantee buying if our price is higher than the
             # historical transacted price
             if not order.price >= next_price:
+                if verbose > 2:
+                    print('price too low')
                 strategy.reject_order(order.identifier)
                 continue
             else:
@@ -86,6 +88,8 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
                 filled_qty = min(order.qty, next_qty)
                 filled_price = next_price
                 if filled_price * filled_qty > funds:
+                    if verbose > 2:
+                        print('insufficient funds')
                     strategy.reject_order(order.identifier)
                     continue
                 fund_delta = -filled_price * filled_qty
@@ -94,12 +98,16 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
         # try to sell; same limitations apply as above
         if order.sell:
             if not order.price <= next_price:
+                if verbose > 2:
+                    print('price too high')
                 strategy.reject_order(order.identifier)
                 continue
             else:
                 filled_qty = min(order.qty, next_qty)
                 filled_price = next_price
                 if filled_qty > balance:
+                    if verbose > 2:
+                        print('insufficient balance')
                     strategy.reject_order(order.identifier)
                     continue
                 fund_delta = filled_price * filled_qty
@@ -124,7 +132,7 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
     if verbose > 0:
         print('=' * 50)
         print('Backtest summary for:')
-        pp = pprint.PrettyPrinter(indent=4)  # log of what this test run was for
+        pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(input_args)
         print('Funds: {} -> {}'.format(initial_funds, funds))
         print('Balance: {} -> {}'.format(initial_balance, balance))
@@ -154,11 +162,12 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
     plot(go.Figure(data=traces, layout=layout), filename=plot_name)
 
     time4 = time.time()
-    
+
     if verbose > 0:
-        print('time to load data: ', time2-time1)
-        print('time to train: {}, {}s per 1000 data'.format(time3-time2, (time3-time2)/len(data)*1000))
-        print('time to plot: ', time4-time3)
+        print('Time to load data: {}s'.format(time2 - time1))
+        print('Time to train: {}s, {}s per 1000 ticks'.format(
+            time3 - time2, (time3-time2)))
+        print('Time to plot: {}s'.format(time4-time3))
 
     return dict(fund_history=fund_history,
                 balance_history=balance_history,
