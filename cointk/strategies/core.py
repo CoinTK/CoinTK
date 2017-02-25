@@ -1,10 +1,15 @@
 class Strategy(object):
     '''
-        A strategy for deciding when and how much to buy/sell
+        A general strategy framework for deciding when and how much to buy/sell
 
     '''
     def __init__(self):
         self.orders = []
+
+    def init_backtest(self, funds, balance, worth):
+        self.intial_funds = funds
+        self.initial_balance = balance
+        self.initial_worth = worth
 
     def evaluate(self, ts, price, qty, funds, balance):
         order = self.gen_order(ts, price, qty, funds, balance)

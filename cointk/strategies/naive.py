@@ -5,9 +5,11 @@ from collections import deque
 
 class NaiveStrategy(Strategy):
     '''
-        Very basic strategy: buy if we're on a rising price trend, sell if we've been losing money
+        Very basic strategy: buy if we're on a rising price trend,
+        sell if we've been losing money
 
-        This is just to provide a 'baseline' to test the performance of our smarter algorithms
+        This is just to provide a 'baseline' to test the performance of our
+        smarter algorithms
     '''
     def __init__(self, n_prices=10, qty=0.01, threshold=0.8, price_inc=0.1):
         super().__init__()
@@ -27,7 +29,8 @@ class NaiveStrategy(Strategy):
             downtrend = [self.old_prices[i] <= self.old_prices[i-1]
                          for i in range(1, self.n_prices)].count(True)
             downtrend /= (self.n_prices - 1)
-            # simply Naive strategy: buy if we're on an uptrend, sell if we're on a downtrend
+            # simply Naive strategy: buy if we're on an uptrend, sell if we're
+            # on a downtrend
             if uptrend > self.threshold:
                 order = Order(buy=True, price=price + self.price_inc,
                               qty=self.qty, identifier=len(self.orders))
