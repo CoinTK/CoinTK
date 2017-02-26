@@ -7,7 +7,7 @@ def read(fname):
 
 
 setup(
-    name='CoinTK',
+    name='cointk',
     version='0.0.1',
     author='Alex Gajewski, Wanqi Zhu, Ashwin Aggarwal',
     author_email='agajews@gmail.com, 1213.ghs@gmail.com, aaggarw99@gmail.com',
