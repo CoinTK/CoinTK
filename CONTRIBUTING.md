@@ -1,6 +1,6 @@
 # Contibuting to CoinTK
 
-Welcome to the CoinTK contributing page! We're super excited you've taken an interest in this project.
+Welcome to the CoinTK contributing page! We're super excited you've taken an interest in this project. Also check out [BitBox](https://github.com/CoinTK/BitBox-Server), a webserver and iOS app (remote control coming soon!) built on CoinTK for backtesting and dry running prototype strategies.
 
 ## Quickstart
 * Take a look at our [todo list](https://github.com/CoinTK/CoinTK/blob/master/TODO.md)

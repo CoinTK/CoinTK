@@ -1,7 +1,7 @@
 # CoinTK
 ## Bitcoin Trading Algorithm Backtesting and Analysis Toolkit
 
-CoinTK -- An open-sourced framework for rapid prototyping and testing of Bitcoin trading strategies. Also check out BitBox, a webserver and iOS app (remote control coming soon!) for backtesting and dry running prototype strategies.
+CoinTK -- An open-sourced framework for rapid prototyping and testing of Bitcoin trading strategies. Also check out [BitBox](https://github.com/CoinTK/BitBox-Server), a webserver and iOS app (remote control coming soon!) built on CoinTK for backtesting and dry running prototype strategies.
 
 ---
 
