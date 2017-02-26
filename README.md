@@ -3,6 +3,8 @@
 
 CoinTK -- An open-sourced framework for rapid prototyping and testing of Bitcoin trading strategies. Also check out [BitBox Server](https://github.com/CoinTK/BitBox-Server), a webserver  built on CoinTK for backtesting and dry running prototype strategies (remote control coming soon!), and [BitBox iOS](https://github.com/CoinTK/BitBox), an iOS APP integrated with the BitBox server for monitoring, analyzing, visualizing, and (soon) initializing backtests.
 
+CoinTK keeps humans in the loop by providing them with the analysis and visualizations they need to make informed decisions about the trading algorithms they use.
+
 ---
 
 # Getting Started
@@ -72,11 +74,11 @@ We've implemented a few example strategies and backtested them on the automatica
 
 * `cointk/` contains most of the algorithmic work
 
-* `strategies/` contains different buying/selling strategies, which is just a decision framework based on the given state of price/quantity and past histories
+  * `strategies/` contains different buying/selling strategies, which is just a decision framework based on the given state of price/quantity and past histories
 
-* `prescient` contains strategies that have access to perfect information, i.e. all historical and future data. These are only useful for a Machine Learning extension we will build in the future, which we hope to train to model such a prescient strategy *without* having perfect informaiton.
+    * `prescient/` contains strategies that have access to perfect information, i.e. all historical and future data. These are only useful for a Machine Learning extension we will build in the future, which we hope to train to model such a prescient strategy *without* having perfect informaiton.
 
-* `backtests/` tests strategies running on historical data, so you can evaluate performance had you ran this strategy since the beginning
+* `example_backtests/` tests our sample strategies running on historical data, so you can evaluate performance had you ran this strategy since the beginning
 
 * `plots/` contain plots generated locally by `plotly` -- such as when you run [backtest.py](cointk/backtest.py).
 
