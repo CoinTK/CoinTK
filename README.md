@@ -49,9 +49,7 @@ strategy included in cointk
 
     You should see something like this pop up in a browser window:
 
-    ![Naive Backtest Output](plots/naive.py-output.png)
-    ![Naive Backtest Terminal Output](plots/naive.py-terminal-output.png)
-
+    ![Naive Backtest Output](plots/naive_plot.png)
 
     From here, you can play around with different strategies and testing parameters via scripts in ```backtests```, or start thinking about making your own [strategy](#creating-your-own-strategies).
 
