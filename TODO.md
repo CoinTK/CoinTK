@@ -13,7 +13,7 @@
 
 
 * Better Strategies
-	
+
 	- [ ] Machine Learning, especially to predict prescient algorithms
 		- [ ] General framework for a ML training interface
 	- [ ] Clean up EMA code logic & optimize its parameters
@@ -24,7 +24,6 @@
 * Performance Visualization & Evaluation
 
 	- [ ] Ability to graph multiply strategies in the same graph (run multiple backtests for the same graph)
-	- [ ] Make an web visualization similar to the iOS app
 
 
 * Live Testing

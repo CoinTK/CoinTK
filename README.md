@@ -1,7 +1,7 @@
 # CoinTK
 ## Bitcoin Trading Algorithm Backtesting and Analysis Toolkit
 
-CoinTK -- An open-sourced framework for rapid prototyping and testing of Bitcoin trading strategies. Also check out [BitBox Server](https://github.com/CoinTK/BitBox-Server), a webserver  built on CoinTK for backtesting and dry running prototype strategies (remote control coming soon!), and [BitBox](https://github.com/CoinTK/BitBox), an iOS APP integrated with the BitBox-Server and CoinTK python scripts with fancy visualization tools.
+CoinTK -- An open-sourced framework for rapid prototyping and testing of Bitcoin trading strategies. Also check out [BitBox Server](https://github.com/CoinTK/BitBox-Server), a webserver  built on CoinTK for backtesting and dry running prototype strategies (remote control coming soon!), and [BitBox iOS](https://github.com/CoinTK/BitBox), an iOS APP integrated with the BitBox server for monitoring, analyzing, visualizing, and (soon) initializing backtests.
 
 ---
 
@@ -90,6 +90,10 @@ To create your own strategy, create a class similar to one of the sample strateg
 	gen_order(self, ts, price, qty, funds, balance):
 ```
 function that decides, given the tuple (ts, price, qty) and any past histories stored in the `Strategy` class, whether to buy or sell.
+
+# Contributing
+
+Like what you see? Check out our [contributing guide](https://github.com/CoinTK/BitBox-Server/blob/master/CONTRIBUTING.md) to see how you can help!
 
 # License
 
