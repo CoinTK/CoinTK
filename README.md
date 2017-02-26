@@ -1,7 +1,7 @@
 # CoinTK
 ## Bitcoin Trading Algorithm Backtesting and Analysis Toolkit
 
-CoinTK -- An open-sourced framework for rapid prototyping and testing of Bitcoin trading strategies. Also check out [BitBox](https://github.com/CoinTK/BitBox-Server), a webserver and iOS app (remote control coming soon!) built on CoinTK for backtesting and dry running prototype strategies.
+CoinTK -- An open-sourced framework for rapid prototyping and testing of Bitcoin trading strategies. Also check out [BitBox](https://github.com/CoinTK/BitBox-Server), a webserver  built on CoinTK for backtesting and dry running prototype strategies (remote control coming soon!), and [BitBox](https://github.com/CoinTK/BitBox), an iOS APP integrated with the BitBox-Server and CoinTK python scripts with fancy visualization tools.
 
 ---
 
@@ -58,10 +58,14 @@ strategy included in cointk
 
 # Example strategies
 We've implemented a few example strategies and backtested them on the automatically downloaded coinbase to USD dataset, with many more to come.
-* Naive: Very straightforwardly buy when more than a certain threshold of the previous `n` timesteps have seen an increase in price, sell when more than a certain threshold have seen an increase
-* Reverse Naive: Amazingly, on some test sets, doing the exact opposite of what is described above performs better. This may serve to temper one's expectations with respect to trading algorithms–something completely crazy might work well on one particular dataset.
-* Random: Similar to the reverse naive in purpose, we've included a random strategy that occasionally performs well on certain subsets of the training data.
-* Exponential Moving Average (ema): Here we use an a simple exponential moving average to approximate price trends. If the trend is going up (and crosses the current price) then sell, and if the trend is going down (and crosses the current price), then buy.
+* [Naive](cointk/strategies/naive.py): Very straightforwardly buy when more than a certain threshold of the previous `n` timesteps have seen an increase in price, sell when more than a certain threshold have seen an increase.
+* [Reverse Naive](cointk/strategies/naive_reverse.py): Amazingly, on some test sets, doing the exact opposite of what is described above performs better. This may serve to temper one's expectations with respect to trading algorithms–something completely crazy might work well on one particular dataset.
+    ![](cointk/plots/naive_reverse.png)
+* [Random](cointk/strategies/simple_random.py): Similar to the reverse naive in purpose, we've included a random strategy that occasionally performs well on certain subsets of the training data.
+    ![](cointk/plots/simple_random.png)
+* [Exponential Moving Average (EMA)](cointk/strategies/ema.py): Here we use an a simple exponential moving average to approximate price trends. If the trend is going up (and crosses the current price) then sell, and if the trend is going down (and crosses the current price), then buy.
+    ![](cointk/plots/ema.png)
+
 
 
 # File structures
@@ -81,7 +85,7 @@ We've implemented a few example strategies and backtested them on the automatica
 
 # Creating your own strategies
 
-To create your own strategy, create a class similar to one of the sample strategies given: [Naive](cointk/strategies/hp_naive.py), [Reverse Naive](cointk/strategies/naive_reverse.py), [Random](cointk/strategies/simple_random.py), and [Exponential Moving Averages](cointk/strategies/ema.py). It should inherit the `Strategy` class (defined [here](cointk/strategies/core.py)) and have a
+To create your own strategy, create a class similar to one of the sample strategies given: [Naive](cointk/strategies/naive.py), [Reverse Naive](cointk/strategies/naive_reverse.py), [Random](cointk/strategies/simple_random.py), and [Exponential Moving Averages](cointk/strategies/ema.py). It should inherit the `Strategy` class (defined [here](cointk/strategies/core.py)) and have a
 ```
 	gen_order(self, ts, price, qty, funds, balance):
 ```

@@ -9,5 +9,5 @@ data/*
 
 plots/*
 histories/*
-!plots/naive_plot.png
+!plots/*.png
 !plots/Naive-full-threshhold-0.8.html
