@@ -7,6 +7,10 @@ def to_datetimes(array):
     return [datetime.utcfromtimestamp(x) for x in array]
 
 
+def from_datetimes(array):
+    return [x.timestamp() for x in array]
+
+
 def subarray_with_stride(array, stride):
     return np.asarray([array[i] for i in range(0, len(array), stride)])
 
@@ -29,7 +33,11 @@ def save_data(data, fnm, name='data'):
 def csv_to_npz(csv_fnm, npz_fnm, name='data'):
     with open(csv_fnm, 'r') as f:
         reader = csv.reader(f)
-        data = np.asarray(list(reader)[:-1], dtype='float32')
+        data = np.zeros((sum(1 for row in reader), 3), dtype='float32')
+        print(data.shape)
+        f.seek(0)
+        for i, row in enumerate(reader):
+            data[i, :] = int(row[0]), float(row[1]), float(row[2])
     np.savez(npz_fnm, **{name: data})
 
 
