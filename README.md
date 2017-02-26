@@ -51,9 +51,17 @@ strategy included in cointk
 
     ![Naive Backtest Output](plots/naive_plot.png)
 
-    From here, you can play around with different strategies and testing parameters via scripts in ```backtests```, or start thinking about making your own [strategy](#creating-your-own-strategies).
+    From here, you can play around with different strategies and testing parameters via scripts in `backtests`, or start thinking about making your own [strategy](#creating-your-own-strategies).
 
     Happy developing!
+
+
+# Example strategies
+We've implemented a few example strategies and backtested them on the automatically downloaded coinbase to USD dataset, with many more to come.
+* Naive: Very straightforwardly buy when more than a certain threshold of the previous `n` timesteps have seen an increase in price, sell when more than a certain threshold have seen an increase
+* Reverse Naive: Amazingly, on some test sets, doing the exact opposite of what is described above performs better. This may serve to temper one's expectations with respect to trading algorithms–something completely crazy might work well on one particular dataset.
+* Random: Similar to the reverse naive in purpose, we've included a random strategy that occasionally performs well on certain subsets of the training data.
+* Exponential Moving Average (ema): Here we use an a simple exponential moving average to approximate price trends. If the trend is going up (and crosses the current price) then buy, and if the trend is going down (and crosses the current price), then sell.
 
 
 # File structures
