@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name='cointk',
-    version='0.0.10',
+    version='0.0.11',
     author='Alex Gajewski, Wanqi Zhu, Ashwin Aggarwal',
     author_email='agajews@gmail.com, 1213.ghs@gmail.com, aaggarw99@gmail.com',
     description=('An open-sourced platform for rapid prototyping and testing '
