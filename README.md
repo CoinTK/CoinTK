@@ -47,7 +47,7 @@ strategy included in cointk
     python3 naive.py
     ```
 
-    You see something like this pop up in a browser window:
+    You should see something like this pop up in a browser window:
 
     ![Naive Backtest Output](plots/naive.py-output.png)
     ![Naive Backtest Terminal Output](plots/naive.py-terminal-output.png)
