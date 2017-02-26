@@ -171,11 +171,7 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
     buy_hold_ts_history = plot_data[:, 0]
     buy_hold_eq_history = 1000 * plot_data[:, 1] / plot_data[0, 1]
 
-    if plot_ema:
-        ema = subarray_with_stride(strategy.get_emas(), 100)
-        results.append({'x': to_datetimes(plot_data[:, 0]),
-                        'y': 1000 * ema / plot_data[0, 1],
-                        'name': 'EMA Price (scaled)'})
+    results += strategy.additional_plots()
 
     if plot_fnm is not None:
         plot_results(results, plot_fnm)
