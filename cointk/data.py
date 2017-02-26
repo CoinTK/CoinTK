@@ -7,6 +7,10 @@ def to_datetimes(array):
     return [datetime.utcfromtimestamp(x) for x in array]
 
 
+def from_datetimes(array):
+    return [x.timestamp() for x in array]
+
+
 def subarray_with_stride(array, stride):
     return np.asarray([array[i] for i in range(0, len(array), stride)])
 

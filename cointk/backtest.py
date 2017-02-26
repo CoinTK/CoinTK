@@ -3,6 +3,7 @@ from plotly.offline import plot
 import plotly.graph_objs as go
 from .data import load_data, subarray_with_stride, to_datetimes
 import time
+import numpy as np
 import pprint
 
 
@@ -25,8 +26,9 @@ def resolve_data(data, fnm, name, datapart,
 
 def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
              fee=0.0025, data=None, data_fnm='data/coinbaseUSD.npz',
+             history_fnm='histories/backtest.npz',
              data_name='data', datapart='val',
-             plot_name='temp-plot.html',
+             plot_fnm='temp-plot.html',
              train_prop=0.8, val_prop=0.1, verbose=1, print_freq=10000):
 
     input_args = locals()  # save the input arguments
@@ -144,30 +146,41 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
 
     plot_data = subarray_with_stride(data, 100)
     print(plot_data.shape)
-    price_trace = go.Scatter(x=to_datetimes(plot_data[:, 0]),
-                             y=1000 * plot_data[:, 1] / plot_data[0, 1])
-    worth_trace = go.Scatter(
-        x=to_datetimes(ts_history),
-        y=worth_history)
-    balance_trace = go.Scatter(
-        x=to_datetimes(ts_history),
-        y=balance_worth_history)
-    traces = [price_trace, worth_trace, balance_trace]
-    layout = go.Layout(
-        title='Trading performance over time',
-        yaxis=dict(
-            title='Value (USD)'
-        ),
-    )
-    plot(go.Figure(data=traces, layout=layout), filename=plot_name)
+    buy_hold_ts_history = plot_data[:, 0]
+    buy_hold_eq_history = 1000 * plot_data[:, 1] / plot_data[0, 1]
+    if plot_fnm is not None:
+        price_trace = go.Scatter(x=to_datetimes(buy_hold_ts_history),
+                                 y=buy_hold_eq_history)
+        worth_trace = go.Scatter(
+            x=to_datetimes(ts_history),
+            y=worth_history)
+        balance_trace = go.Scatter(
+            x=to_datetimes(ts_history),
+            y=balance_worth_history)
+        traces = [price_trace, worth_trace, balance_trace]
+        layout = go.Layout(
+            title='Trading performance over time',
+            yaxis=dict(
+                title='Value (USD)'
+            ),
+        )
+        plot(go.Figure(data=traces, layout=layout), filename=plot_fnm)
 
     time4 = time.time()
 
     if verbose > 0:
         print('Time to load data: {}s'.format(time2 - time1))
         print('Time to train: {}s, {}s per 1000 ticks'.format(
-            time3 - time2, (time3-time2)))
-        print('Time to plot: {}s'.format(time4-time3))
+            time3 - time2, (time3 - time2)))
+        if plot_fnm is not None:
+            print('Time to plot: {}s'.format(time4-time3))
+
+    np.savez(history_fnm, ts_history=np.asarray(ts_history, dtype='int32'),
+             buy_hold_eq_history=buy_hold_eq_history,
+             buy_hold_ts_history=np.asarray(buy_hold_ts_history,
+                                            dtype='int32'),
+             worth_history=worth_history,
+             balance_worth_history=balance_worth_history)
 
     return dict(fund_history=fund_history,
                 balance_history=balance_history,
