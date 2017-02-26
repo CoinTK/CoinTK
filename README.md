@@ -75,7 +75,7 @@ strategy included in cointk
 
 # Creating your own strategies
 
-To create your own strategy, create a class similar to one of the sample strategies given: [Naive](cointk/strategies/hp_naive.py), [Reverse Naive](cointk/strategies/naive_reverse.py), [Random](cointk/strategies/simple_random.py). It should inherit the `Strategy` class (defined [here](cointk/strategies/core.py)) and have a
+To create your own strategy, create a class similar to one of the sample strategies given: [Naive](cointk/strategies/hp_naive.py), [Reverse Naive](cointk/strategies/naive_reverse.py), [Random](cointk/strategies/simple_random.py), and [Exponential Moving Averages](cointk/strategies/ema.py). It should inherit the `Strategy` class (defined [here](cointk/strategies/core.py)) and have a
 ```
 	gen_order(self, ts, price, qty, funds, balance):
 ```

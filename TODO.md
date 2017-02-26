@@ -1,9 +1,32 @@
 # TODO List
 
-* Heading 1
-    - [ ] Item 1
-    - [ ] Item 2
-    - [ ] Item 3
-* Heading 2
-    - [ ] Item 1
-    - [ ] Item 2
+* General
+
+	- [ ] Document all the function input parameters
+
+
+* Dry testing
+
+	- [ ] In addition to running our strategies on past data, we want to be able to pull live data (syncing with Bitcoin trading APIs) and dry-run our algorithms, so users can see the performance of their own strategies live.
+	- [ ] Support for pulling data from multiple exchanges (but still running single-exchange strategies)
+	- [ ] Support for multi-exchange strategies
+
+
+* Better Strategies
+	
+	- [ ] Machine Learning, especially to predict prescient algorithms
+		- [ ] General framework for a ML training interface
+	- [ ] Clean up EMA code logic & optimize its parameters
+	- [ ] Higher-performing strategies
+	- [ ] General framework for risk management of strategies
+
+
+* Performance Visualization & Evaluation
+
+	- [ ] Ability to graph multiply strategies in the same graph (run multiple backtests for the same graph)
+	- [ ] Make an web visualization similar to the iOS app
+
+
+* Live Testing
+
+	- [ ] Live connection to the exchanges, being able to run strategies real-time with real-money.
