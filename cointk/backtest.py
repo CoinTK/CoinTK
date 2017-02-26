@@ -27,7 +27,7 @@ def resolve_data(data, fnm, name, datapart,
 def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
              fee=0.0025, data=None, data_fnm='data/coinbaseUSD.npz',
              history_fnm='histories/backtest.npz',
-             data_name='data', datapart='val', plot_ema=False, 
+             data_name='data', datapart='val', plot_ema=False,
              plot_fnm='temp-plot.html',
              train_prop=0.8, val_prop=0.1, verbose=1, print_freq=10000):
 
@@ -150,34 +150,43 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
         print('Buy hold equivelent: {} -> {}'.format(initial_worth,
                                                      buy_hold_worth))
 
-
     plot_data = subarray_with_stride(data, 100)
 
-    # print(data.shape, data[:10], data[-10:], ts_history, balance_worth_history)
-
-    results = [{'x': to_datetimes(plot_data[:, 0]), 'y': 1000 * plot_data[:, 1] / plot_data[0, 1], 'name': 'Buy-hold net worth (Bitcoin Price scaled)', 'line': dict(width=2.0)},
-        {'x': to_datetimes(plot_data[:, 0]), 'y': balance_worth_history, 'name': 'Algorithm Nonliquidable Bitcoin Worth', 'fill': 'tozeroy', 'line': dict(color='rgb(111, 231, 219)')},
-         {'x': to_datetimes(plot_data[:, 0]), 'y': worth_history, 'name': 'Algorithm Net Worth (Bitcoin + Cash)', 'fill': 'tonexty', 'line': dict(width=0.5, color='rgb(184, 247, 212)')}]
+    results = [{'x': to_datetimes(plot_data[:, 0]),
+                'y': 1000 * plot_data[:, 1] / plot_data[0, 1],
+                'name': 'Buy-hold net worth (Bitcoin Price scaled)',
+                'line': dict(width=2.0)},
+               {'x': to_datetimes(plot_data[:, 0]),
+                'y': balance_worth_history,
+                'name': 'Algorithm Nonliquidable Bitcoin Worth',
+                'fill': 'tozeroy',
+                'line': dict(color='rgb(111, 231, 219)')},
+               {'x': to_datetimes(plot_data[:, 0]),
+                'y': worth_history,
+                'name': 'Algorithm Net Worth (Bitcoin + Cash)',
+                'fill': 'tonexty',
+                'line': dict(width=0.5, color='rgb(184, 247, 212)')}]
 
     # print(plot_data.shape)
     buy_hold_ts_history = plot_data[:, 0]
     buy_hold_eq_history = 1000 * plot_data[:, 1] / plot_data[0, 1]
-    
 
     if plot_ema:
         ema = subarray_with_stride(strategy.get_emas(), 100)
-        results.append({'x': to_datetimes(plot_data[:, 0]), 'y': 1000 * ema / plot_data[0, 1], 'name': 'EMA Price (scaled)'})
+        results.append({'x': to_datetimes(plot_data[:, 0]),
+                        'y': 1000 * ema / plot_data[0, 1],
+                        'name': 'EMA Price (scaled)'})
 
     if plot_fnm is not None:
-        plot_results(results, plot_name)
-    
+        plot_results(results, plot_fnm)
+
     time4 = time.time()
 
     if verbose > 0:
         print('Time to load data: {}s'.format(time2 - time1))
         print('Time to train: {}s, {}s per 1000 ticks'.format(
             time3 - time2, (time3 - time2)/len(data)))
-        
+
         print('Time to plot: {}s'.format(time4-time3))
 
     np.savez(history_fnm, ts_history=np.asarray(ts_history, dtype='int32'),
@@ -193,25 +202,12 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
                 worth_history=worth_history)
 
 
-
 def plot_results(results, plot_name='temp-plot.html'):
     traces = []
 
     for input_args in results:
-        # x = data[0]
-        # y = data[1]
-        # if len(data) > 2:
-        #     label = data[2]
-        # else:
-        #     label = 'Trace ' + str(len(traces))
-
-        # if len(data) > 3:
-        #     fill = data[3]
-        # else:
-        #     fill = None
-
         traces.append(go.Scatter(**input_args))
-    
+
     layout = go.Layout(
         title='Trading performance over time',
         yaxis=dict(
@@ -219,4 +215,3 @@ def plot_results(results, plot_name='temp-plot.html'):
         ),
     )
     plot(go.Figure(data=traces, layout=layout), filename=plot_name)
-
