@@ -8,6 +8,7 @@ data/*
 *.pyo
 
 plots/*
+histories/*
 !plots/naive.py-output.png
 !plots/naive.py-terminal-output.png
 !plots/Naive-full-threshhold-0.8.html
