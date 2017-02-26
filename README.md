@@ -58,7 +58,7 @@ strategy included in cointk
 
 # File structures
 
-`cointk/` contains most of the algorithmic work
+* `cointk/` contains most of the algorithmic work
 
 * `strategies/` contains different buying/selling strategies, which is just a decision framework based on the given state of price/quantity and past histories
 
