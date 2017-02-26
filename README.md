@@ -61,7 +61,7 @@ We've implemented a few example strategies and backtested them on the automatica
 * Naive: Very straightforwardly buy when more than a certain threshold of the previous `n` timesteps have seen an increase in price, sell when more than a certain threshold have seen an increase
 * Reverse Naive: Amazingly, on some test sets, doing the exact opposite of what is described above performs better. This may serve to temper one's expectations with respect to trading algorithms–something completely crazy might work well on one particular dataset.
 * Random: Similar to the reverse naive in purpose, we've included a random strategy that occasionally performs well on certain subsets of the training data.
-* Exponential Moving Average (ema): Here we use an a simple exponential moving average to approximate price trends. If the trend is going up (and crosses the current price) then buy, and if the trend is going down (and crosses the current price), then sell.
+* Exponential Moving Average (ema): Here we use an a simple exponential moving average to approximate price trends. If the trend is going up (and crosses the current price) then sell, and if the trend is going down (and crosses the current price), then buy.
 
 
 # File structures
@@ -86,3 +86,7 @@ To create your own strategy, create a class similar to one of the sample strateg
 	gen_order(self, ts, price, qty, funds, balance):
 ```
 function that decides, given the tuple (ts, price, qty) and any past histories stored in the `Strategy` class, whether to buy or sell.
+
+# License
+
+CoinTK is [MIT licensed](http://mit-license.org/).
