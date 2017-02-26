@@ -7,6 +7,7 @@ class NaiveStrategyReverse(Strategy):
     '''
         REVERSE basic strategy: buy if we're on a rising price trend, sell if we've been losing money
 
+        Essentially, we're betting against the market trend
     '''
     def __init__(self, n_prices=10, qty=0.01, threshold=0.8, price_inc=0.1):
         super().__init__()
@@ -15,22 +16,29 @@ class NaiveStrategyReverse(Strategy):
         self.qty = qty
         self.threshold = threshold
         self.price_inc = price_inc
+        self.uptrend_count = 0
+        self.downtrend_count = 0
+
 
     def gen_order(self, ts, price, qty, funds, balance):
         order = None
-        if len(self.old_prices) == self.n_prices:
-            # amount of days the price increased
-            uptrend = [self.old_prices[i] >= self.old_prices[i-1]
-                       for i in range(1, self.n_prices)].count(True)
-            uptrend /= (self.n_prices - 1)
-            downtrend = [self.old_prices[i] <= self.old_prices[i-1]
-                         for i in range(1, self.n_prices)].count(True)
-            downtrend /= (self.n_prices - 1)
+        if len(self.old_prices) > 1:
+            if price >= self.old_prices[-1]:
+                self.uptrend_count += 1
+            if price <= self.old_prices[-1]:
+                self.downtrend_count += 1
+            if len(self.old_prices) > self.n_prices + 1:
+                if self.old_prices[1] >= self.old_prices[0]:
+                    self.uptrend_count -= 1
+                if self.old_prices[1] <= self.old_prices[0]:
+                    self.downtrend_count -= 1
+                self.old_prices.popleft()
+            
             # reverse Naive strategy: SELL if we're on an uptrend, BUY if we're on a downtrend
-            if uptrend > self.threshold:
+            if self.uptrend_count / len(self.old_prices) > self.threshold:
                 order = Order(sell=True, price=price + self.price_inc,
                               qty=self.qty, identifier=len(self.orders))
-            if downtrend > self.threshold:
+            if self.downtrend_count / len(self.old_prices) > self.threshold:
                 order = Order(buy=True, price=price - self.price_inc,
                               qty=self.qty, identifier=len(self.orders))
         self.old_prices.append(price)

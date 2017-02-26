@@ -10,6 +10,10 @@ class NaiveStrategy(Strategy):
 
         This is just to provide a 'baseline' to test the performance of our
         smarter algorithms
+
+        This is significantly faster than naive.py, since it doesn't recalculate
+        uptrend/downtrends from scratch every time. Instead, as we encounter new data points,
+        we simply increment/decrement the uptrend/downtrend counters by 1
     '''
     def __init__(self, n_prices=10, qty=0.01, threshold=0.8, price_inc=0.1):
         super().__init__()
@@ -20,6 +24,7 @@ class NaiveStrategy(Strategy):
         self.price_inc = price_inc
         self.uptrend_count = 0
         self.downtrend_count = 0
+
 
     def gen_order(self, ts, price, qty, funds, balance):
         order = None

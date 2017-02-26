@@ -5,6 +5,7 @@ from ...order import OrderSpec
 class QtyIndependent(PrescientStrategy):
     def __init__(self, qty=0.1):
         super().__init__()
+        # a spike is the top of a peak or the bottom of a valley
         self.spikes = []  # (idx, price)
         self.runs = []  # (start_idx, start_price, up?)
         self.run_idx = 0

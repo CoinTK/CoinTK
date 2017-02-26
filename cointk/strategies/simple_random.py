@@ -8,12 +8,20 @@ class RandomStrategy(Strategy):
     '''
         Random!!
     '''
-    def __init__(self, p_buy=0.1, p_sell=0.1, randomize_quantity=''):
+    def __init__(self, p_buy=0.1, p_sell=0.1, seed=None, randomize_qty=''):
+        '''
+            randomize_qty = 'Linear' if you want to choose a random amount 
+            between (0, qty) every time we buy or sell
+
+            Otherwise it's assumed we buy/sell the maximum amount possible
+        '''
         super().__init__()
         self.p_buy = p_buy
         self.p_sell = p_sell
         self.identifier = -1
-        self.randomize_quantity = randomize_quantity
+        self.randomize_qty = randomize_qty
+
+        random.seed(seed)
         
 
 
@@ -24,7 +32,7 @@ class RandomStrategy(Strategy):
         r = random.random()
 
         if r < self.p_buy + self.p_sell:
-            if self.randomize_quantity == 'linear':
+            if self.randomize_qty == 'linear':
                 qty *= random.random()
 
             self.identifier += 1
