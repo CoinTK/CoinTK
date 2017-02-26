@@ -7,15 +7,18 @@ CoinTK -- An open-sourced platform for rapid prototyping and testing of BitCoin 
 <br>
 # Getting Started
 
-1. Download the code: ```git clone https://github.com/CoinTK/CoinTK.git``` and install prerequisites.
-2. Press play. Memes~
+1. Download the code: ```git clone https://github.com/CoinTK/CoinTK.git``` and run ```[setup.py](setup.py).```
+2. Press play: ```cointk/init.py```. Memes~
 3. ???
 4. [Profit](http://i1.kym-cdn.com/entries/icons/original/000/000/248/underpants.jpg)
 
 
 In all seriousness -- you can get [full data](#data) if necessary, otherwise you can use test datasets included in ```data/``` (depending on your Strategy and parameters, you may not get any trade activity running on the sample datasets).
 
-To get started, run ```python backtests/naive.py```. You should get something like this:
+
+To get started, make sure that ```CoinTK/``` is in your ```$PYTHONPATH``` variable. You can do this by adding the line ```export PYTHONPATH=/path/to/this/folder/CoinTK:$PYTHONPATH``` to your ```~/.bash_profile```.
+
+To make sure the platform is working, run ```python backtests/naive.py```. You should get something like this:
 
 ![Naive Backtest Output](plots/naive.py-output.png)
 ![Naive Backtest Terminal Output](plots/naive.py-terminal-output.png)
@@ -25,6 +28,14 @@ To get started, run ```python backtests/naive.py```. You should get something li
 From here, you can play around with different strategies and testing parameters via scripts in ```backtests```, or start thinking about making your own [strategy](#creating-your-own-strategies).
 
 Happy developing (and mining Bitcoins)!
+
+
+# Data
+
+Test dataset (of sizes 10k, 30k, 100k) in ```data/```
+* [full dataset 2015/09-2016/12](http://api.bitcoincharts.com/v1/csv/coinbaseUSD.csv.gz)
+* use ```csv_to_npz()``` function in ```cointk/data.py``` to convert csv to npz; 
+  * e.g. ```csv_to_npz('data/coinbaseUSD.csv', 'data/coinbaseUSD.npz')```
 
 
 
@@ -57,9 +68,9 @@ function that decides, given the tuple (ts, price, qty) and any past histories s
 
 
 
-# Data
 
-Test dataset (of sizes 10k, 30k, 100k) in ```data/```
-* [full dataset 2015/09-2016/12](http://api.bitcoincharts.com/v1/csv/coinbaseUSD.csv.gz)
-* use ```csv_to_npz() in cointk/data.py``` to convert csv to npz; 
-  * e.g. ```csv_to_npz('data/coinbaseUSD.csv', 'data/coinbaseUSD.npz')```
+
+
+# Backtesting
+
+Backtesting graphs are generated on the validation set. To change its size, change the value of ```train_prop``` and ```val_prop``` when calling ```backtest().```

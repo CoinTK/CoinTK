@@ -26,7 +26,7 @@ def resolve_data(data, fnm, name, datapart,
 def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
              fee=0.0025, data=None, data_fnm='data/coinbaseUSD.npz',
              data_name='data', datapart='val',
-             plot_name='temp-plot.html',
+             plot_name='temp-plot.html', plot_ema=False,
              train_prop=0.8, val_prop=0.1, verbose=1, print_freq=10000):
 
     input_args = locals()  # save the input arguments
@@ -127,6 +127,11 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
         worth_history.append(worth)
         balance_worth_history.append(balance * next_price)
 
+    ts_history.append(next_ts)
+    worth_history.append(worth)
+    balance_worth_history.append(balance * next_price)
+    fund_history.append(funds)
+
     time3 = time.time()
 
     if verbose > 0:
@@ -142,17 +147,53 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
         print('Buy hold equivelent: {} -> {}'.format(initial_worth,
                                                      buy_hold_worth))
 
+
     plot_data = subarray_with_stride(data, 100)
-    print(plot_data.shape)
-    price_trace = go.Scatter(x=to_datetimes(plot_data[:, 0]),
-                             y=1000 * plot_data[:, 1] / plot_data[0, 1])
-    worth_trace = go.Scatter(
-        x=to_datetimes(ts_history),
-        y=worth_history)
-    balance_trace = go.Scatter(
-        x=to_datetimes(ts_history),
-        y=balance_worth_history)
-    traces = [price_trace, worth_trace, balance_trace]
+    print(data.shape, data[:10], data[-10:], ts_history, balance_worth_history)
+
+    results = [{'x': to_datetimes(plot_data[:, 0]), 'y': 1000 * plot_data[:, 1] / plot_data[0, 1], 'name': 'Buy-hold net worth (Bitcoin Price scaled)', 'line': dict(width=2.0)},
+        {'x': to_datetimes(plot_data[:, 0]), 'y': balance_worth_history, 'name': 'Algorithm Nonliquidable Bitcoin Worth', 'fill': 'tozeroy', 'line': dict(color='rgb(111, 231, 219)')},
+         {'x': to_datetimes(plot_data[:, 0]), 'y': worth_history, 'name': 'Algorithm Net Worth (Bitcoin + Cash)', 'fill': 'tonexty', 'line': dict(width=0.5, color='rgb(184, 247, 212)')}]
+
+    if plot_ema:
+        ema = subarray_with_stride(strategy.get_emas(), 100)
+        results.append({'x': to_datetimes(plot_data[:, 0]), 'y': 1000 * ema / plot_data[0, 1], 'name': 'EMA Price (scaled)'})
+
+    plot_results(results, plot_name)
+    
+    time4 = time.time()
+
+    if verbose > 0:
+        print('Time to load data: {}s'.format(time2 - time1))
+        print('Time to train: {}s, {}s per 1000 ticks'.format(
+            time3 - time2, (time3-time2)/len(data)))
+        print('Time to plot: {}s'.format(time4-time3))
+
+    return dict(fund_history=fund_history,
+                balance_history=balance_history,
+                ts_history=ts_history,
+                worth_history=worth_history)
+
+
+
+def plot_results(results, plot_name='temp-plot.html'):
+    traces = []
+
+    for input_args in results:
+        # x = data[0]
+        # y = data[1]
+        # if len(data) > 2:
+        #     label = data[2]
+        # else:
+        #     label = 'Trace ' + str(len(traces))
+
+        # if len(data) > 3:
+        #     fill = data[3]
+        # else:
+        #     fill = None
+
+        traces.append(go.Scatter(**input_args))
+    
     layout = go.Layout(
         title='Trading performance over time',
         yaxis=dict(
@@ -161,15 +202,3 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
     )
     plot(go.Figure(data=traces, layout=layout), filename=plot_name)
 
-    time4 = time.time()
-
-    if verbose > 0:
-        print('Time to load data: {}s'.format(time2 - time1))
-        print('Time to train: {}s, {}s per 1000 ticks'.format(
-            time3 - time2, (time3-time2)))
-        print('Time to plot: {}s'.format(time4-time3))
-
-    return dict(fund_history=fund_history,
-                balance_history=balance_history,
-                ts_history=ts_history,
-                worth_history=worth_history)
