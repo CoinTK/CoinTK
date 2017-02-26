@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def read(fname):
@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name='cointk',
-    version='0.0.3',
+    version='0.0.6',
     author='Alex Gajewski, Wanqi Zhu, Ashwin Aggarwal',
     author_email='agajews@gmail.com, 1213.ghs@gmail.com, aaggarw99@gmail.com',
     description=('An open-sourced platform for rapid prototyping and testing '
@@ -17,7 +17,7 @@ setup(
                  'algorithms coming Soon.'),
     license='MIT',
     url='http://github.com/CoinTK',
-    packages=['cointk'],
+    packages=find_packages(),
     long_description=read('README.md'),
     install_requires=['numpy', 'pprint', 'plotly']
 )

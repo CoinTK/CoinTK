@@ -35,6 +35,7 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
 
     # default to validation
     data = resolve_data(data, data_fnm, data_name, datapart)
+    print(data.shape)
     funds = initial_funds  # US dollars
 
     time1 = time.time()

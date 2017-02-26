@@ -14,13 +14,14 @@ if not os.path.exists(coinbase_usd_npz):
     if not os.path.exists('data'):
         os.makedirs('data')
 
-    print('=' * 50)
-    print('Downloading coinabse-usd datset...')
-    urlretrieve(coinbase_usd_url, coinbase_usd_gz)
+    if not os.path.exists(coinbase_usd_csv):
+        print('=' * 50)
+        print('Downloading coinabse-usd datset...')
+        urlretrieve(coinbase_usd_url, coinbase_usd_gz)
 
-    with gzip.open(coinbase_usd_gz, 'rb') as infile:
-        with open(coinbase_usd_csv, 'wb') as outfile:
-            for line in infile:
-                outfile.write(line)
+        with gzip.open(coinbase_usd_gz, 'rb') as infile:
+            with open(coinbase_usd_csv, 'wb') as outfile:
+                for line in infile:
+                    outfile.write(line)
 
     csv_to_npz(coinbase_usd_csv, coinbase_usd_npz)
