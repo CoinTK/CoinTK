@@ -130,7 +130,7 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
         worth_history.append(worth)
         balance_worth_history.append(balance * next_price)
 
-    ts_history.append(next_ts)
+    ts_history.append(data[-1][0])
     worth_history.append(worth)
     balance_worth_history.append(balance * next_price)
     fund_history.append(funds)
@@ -156,12 +156,12 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
                 'y': 1000 * plot_data[:, 1] / plot_data[0, 1],
                 'name': 'Buy-hold net worth (Bitcoin Price scaled)',
                 'line': dict(width=2.0)},
-               {'x': to_datetimes(plot_data[:, 0]),
+               {'x': to_datetimes(ts_history),
                 'y': balance_worth_history,
-                'name': 'Algorithm Nonliquidable Bitcoin Worth',
+                'name': 'Algorithm Nonliquid Bitcoin Worth',
                 'fill': 'tozeroy',
                 'line': dict(color='rgb(111, 231, 219)')},
-               {'x': to_datetimes(plot_data[:, 0]),
+               {'x': to_datetimes(ts_history),
                 'y': worth_history,
                 'name': 'Algorithm Net Worth (Bitcoin + Cash)',
                 'fill': 'tonexty',
