@@ -11,3 +11,5 @@ plots/*
 histories/*
 !plots/*.png
 !plots/Naive-full-threshhold-0.8.html
+
+cointk.egg-info/*

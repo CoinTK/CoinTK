@@ -14,7 +14,13 @@ CoinTK keeps humans in the loop by providing them with the analysis and visualiz
     sudo apt install python3 python3-pip
     ```
 
-2. Clone and install `cointk`
+2. Clone and install `cointk` from pip
+    ```
+    sudo pip3 install cointk
+    ```
+
+    Or, if you prefer, install manually from this repository:
+    
     ```
     cd && git clone https://github.com/cointk/cointk.git
     cd cointk
