@@ -1,6 +1,8 @@
 from cointk.backtest import backtest
 from cointk.strategies import OldNaiveStrategy
+import random
 
+random.seed(1)
 strategy = OldNaiveStrategy(n_prices=100, threshold=0.8)
 # Use the 100k test dataset
 backtest(strategy, data_fnm='data/coinbaseUSD_100k_sample.npz', plot_name='plots/Naive-test-100k-threshhold-0.8.html', verbose=1)

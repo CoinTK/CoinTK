@@ -1,4 +1,8 @@
 class OrderSpec(object):
+    '''
+        Base class for an order to buy/sell, and whether it succeeded ("filled")
+
+    '''
     def __init__(self, buy=False, sell=False, price=0, qty=0,
                  src_tuple=None, empty=False):
         if src_tuple is not None:

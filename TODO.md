@@ -14,9 +14,11 @@
 
 * Better Strategies
 
+	- [ ] Auto-compare strategies by running them with the same seeding multiple times and comparing results
 	- [ ] Machine Learning, especially to predict prescient algorithms
 		- [ ] General framework for a ML training interface
 	- [ ] Clean up EMA code logic & optimize its parameters
+		- [ ] Think more about its logic -- maybe 'order_once' should take into consideration the trend_threshold as well; 'follow_trend': trend detection should be less sharp and more forgiving; maybe qty=-1 isn't ideal (maybe it should scale with the trend?)
 	- [ ] Higher-performing strategies
 	- [ ] General framework for risk management of strategies
 

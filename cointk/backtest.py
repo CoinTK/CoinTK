@@ -5,6 +5,10 @@ from .data import load_data, subarray_with_stride, to_datetimes
 import time
 import numpy as np
 import pprint
+from copy import deepcopy
+
+
+# main code for running backtests and graphing results
 
 
 def resolve_data(data, fnm, name, datapart,
@@ -29,16 +33,41 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
              history_fnm='histories/backtest.npz',
              data_name='data', datapart='val',
              plot_fnm='temp-plot.html',
-             train_prop=0.8, val_prop=0.1, verbose=1, print_freq=10000):
+             train_prop=0.8, val_prop=0.1, verbose=1, plot_freq=10000, plot_args={}):
 
-    input_args = locals()  # save the input arguments
+    '''
+        Runs backtest for a given strategy on historical dataset and output its decisions and results.
+        Note that because of fill_prob, to get deterministic results you should call random.seed
+        with the same seed before every run.
+
+
+            fill_prob determines the probability that an order will fail, to simulate real market competitions
+
+            fee is the fraction of transaction fee
+            
+            history_fnm is used for the Bitbox-Server
+
+            train_prop and val_prop, each a fraction adding to less than 1, determine the size of the training & testing sets.
+              The rest is the testing set
+
+            datapart determines which part of the data (train/val/test) we are running on
+
+
+            plot_args is any additional optional arguments we pass to additonal_plots
+    '''
+
+    input_args = locals()  # save the input arguments for logging
+    strategy_args = deepcopy(strategy.__dict__)
 
     # default to validation
     data = resolve_data(data, data_fnm, data_name, datapart)
-    print(data.shape)
-    funds = initial_funds  # US dollars
+    if verbose:
+        print("data size: ", data.shape)
+    
 
     time1 = time.time()
+
+    funds = initial_funds  # US dollars
     fund_history = [funds]
     balance = initial_balance  # bitcoin amounts
     balance_history = [balance]
@@ -51,14 +80,16 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
 
     # each tuple is the log of an actual transaction at timestamp ts for the
     # listed price/qty
+
     # we don't have historical data on the order book, so we can only infer
     # what kind of order/sell strategy would have worked based on the actual
-    # transactions namely, if we sell at a lower price or buy at a higher price
+    # transactions.
+    # Namely, if we sell at a lower price or buy at a higher price
     # for the same or less quantity, we should succeed
     time2 = time.time()
 
     for i, (ts, price, qty) in enumerate(data[:-1]):
-        if verbose > 1 and i % print_freq == 0:
+        if verbose > 1 and i % plot_freq == 0:
             print(i, ('worth', worth, 'balance', balance, 'funds', funds))
 
         next_ts, next_price, next_qty = data[i+1]
@@ -116,7 +147,7 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
                 fund_delta = filled_price * filled_qty
                 balance_delta = -filled_qty
 
-        # if order succeeded:
+        # if order succeeded
         strategy.fill_order(order.identifier, filled_price, filled_qty)
         funds -= filled_price * filled_qty * fee  # pay transaction fee
         funds += fund_delta
@@ -142,6 +173,8 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
         print('Backtest summary for:')
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(input_args)
+        print('Strategy initial args:')
+        pp.pprint(strategy_args)
         print('Funds: {} -> {}'.format(initial_funds, funds))
         print('Balance: {} -> {}'.format(initial_balance, balance))
         print('Net worth: {} -> {}'.format(initial_worth, worth))
@@ -150,10 +183,13 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
         print('Buy hold equivelent: {} -> {}'.format(initial_worth,
                                                      buy_hold_worth))
 
-    plot_data = subarray_with_stride(data, 100)
+    # plot every plot_freq data points
+    plot_data = subarray_with_stride(data, plot_freq)
 
+    # by default, we plot the buy-hold equivalent value and algorithm performance,
+    # the latter sectioned into liquid (cash) and nonliquid (Bitcoin) assets
     results = [{'x': to_datetimes(plot_data[:, 0]),
-                'y': 1000 * plot_data[:, 1] / plot_data[0, 1],
+                'y': initial_funds * plot_data[:, 1] / plot_data[0, 1],
                 'name': 'Buy-hold net worth (Bitcoin Price scaled)',
                 'line': dict(width=2.0)},
                {'x': to_datetimes(ts_history),
@@ -169,9 +205,11 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
 
     # print(plot_data.shape)
     buy_hold_ts_history = plot_data[:, 0]
-    buy_hold_eq_history = 1000 * plot_data[:, 1] / plot_data[0, 1]
+    buy_hold_eq_history = initial_funds * plot_data[:, 1] / plot_data[0, 1]
 
-    results += strategy.additional_plots()
+    # we can add additional plots as defined in the Strategy class passed in
+    # e.g. graphing the MA for moving-average algorithms
+    results += strategy.additional_plots(plot_freq, plot_args)
 
     if plot_fnm is not None:
         plot_results(results, plot_fnm)
@@ -199,6 +237,14 @@ def backtest(strategy, initial_funds=1000, initial_balance=0, fill_prob=0.5,
 
 
 def plot_results(results, plot_name='temp-plot.html'):
+    '''
+        results is a list of dictionaries, each of which defines a trace
+         e.g. [{'x': x_data, 'y': y_data, 'name': 'plot_name'}, {...}, {...}]
+
+        Each dictionary's key-value pairs will be passed into go.Scatter
+         to generate a trace on the graph
+
+    '''
     traces = []
 
     for input_args in results:

@@ -3,6 +3,8 @@ import csv
 from datetime import datetime
 
 
+# helper functions for reading/parsing input data and graphing output data
+
 def to_datetimes(array):
     return [datetime.utcfromtimestamp(x) for x in array]
 
@@ -10,11 +12,11 @@ def to_datetimes(array):
 def from_datetimes(array):
     return [x.timestamp() for x in array]
 
-
+# used when graphing: select a datapoint for every |stride| distance
 def subarray_with_stride(array, stride):
     return np.asarray([array[i] for i in range(0, len(array), stride)])
 
-
+# read in .npz file
 def load_data(fnm, name='data', train_prop=0.8,
               val_prop=0.1):
     data = np.load(fnm)[name]
@@ -31,6 +33,9 @@ def save_data(data, fnm, name='data'):
 
 
 def csv_to_npz(csv_fnm, npz_fnm, name='data'):
+    '''
+        Convert csv (which is what Bitcoin trading data is given in) to npz for faster access
+    '''
     with open(csv_fnm, 'r') as f:
         reader = csv.reader(f)
         data = np.zeros((sum(1 for row in reader), 3), dtype='float32')

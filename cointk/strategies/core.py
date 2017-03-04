@@ -23,5 +23,5 @@ class Strategy(object):
     def reject_order(self, idx):
         self.orders[idx].reject()
 
-    def additional_plots(self):
+    def additional_plots(self, plot_freq=10000, plot_args={}):
         return []

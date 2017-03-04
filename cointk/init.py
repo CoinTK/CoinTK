@@ -10,6 +10,8 @@ coinbase_usd_csv = coinbase_usd_fnm + '.csv'
 coinbase_usd_npz = coinbase_usd_fnm + '.npz'
 coinbase_usd_gz = coinbase_usd_csv + '.gz'
 
+
+# get the full dataset if not there
 if not os.path.exists(coinbase_usd_npz):
     if not os.path.exists('data'):
         os.makedirs('data')
